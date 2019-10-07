@@ -11,6 +11,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import Editor from "./components/Editor";
+import { useDispatch, useSelector } from "react-redux";
+import menusModules, { MenusState, MainMenu1 } from "./modules/menusModule";
 
 const drawerWidth = 240;
 
@@ -46,10 +48,13 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   })
 );
-
-export default function App() {
+const App = () => {
   const classes = useStyles();
-
+  const dispatch = useDispatch();
+  const menuList = useSelector(
+    (state: any): MainMenu1[] => state.menus.menuList
+  );
+  const addMenu = () => dispatch(menusModules.actions.addMainMenu1(""));
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -62,10 +67,14 @@ export default function App() {
         anchor="left"
       >
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemText primary={text} />
-              <Button className={classes.addButton} variant="outlined">
+          {menuList.map((menu, index) => (
+            <ListItem button key={menu.id}>
+              <ListItemText primary={menu.title} />
+              <Button
+                className={classes.addButton}
+                variant="outlined"
+                onClick={() => addMenu()}
+              >
                 <AddIcon />
               </Button>
             </ListItem>
@@ -85,4 +94,5 @@ export default function App() {
       </main>
     </div>
   );
-}
+};
+export default App;
